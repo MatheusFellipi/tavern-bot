@@ -1,15 +1,20 @@
 require('dotenv').config();
 
-const { Client, GatewayIntentBits } = require('discord.js');
+const { Client, Collection, GatewayIntentBits } = require('discord.js');
+const fs = require('fs');
 
-const client = new Client({
-  intents: [GatewayIntentBits.Guilds],
-});
+const client = new Client({ intents: GatewayIntentBits.Guilds });
+client.commands = new Collection();
+client.commandArray = [];
 
-client.on('ready', (re) => {
-  // console.log(re, 'bot');
-  console.log(client.user.tag, 'has logged in.');
-});
+const functionFolders = fs.readdirSync('./src/functions');
 
+for (const folder of functionFolders) {
+  const functionFiles = fs
+    .readdirSync(`./src/function${folder}`)
+    .filter((file) => file.endsWith('.js'));
+  for (const file of functionFiles)
+    require(`./functions/${folder}/${file}`)(client);
+}
 
 client.login(process.env.DISCORD_BOT_TOKEN);
