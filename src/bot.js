@@ -17,4 +17,7 @@ for (const folder of functionFolders) {
     require(`./functions/${folder}/${file}`)(client);
 }
 
+client.handleEvents();
+client.handleCommands();
+
 client.login(process.env.DISCORD_BOT_TOKEN);
