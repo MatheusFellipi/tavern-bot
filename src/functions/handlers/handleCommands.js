@@ -8,8 +8,12 @@ module.exports = (client) => {
         .readdirSync(`./src/commands/${folder}`)
         .filter((file) => file.endsWith('.js'));
 
-      for(const file of commandFiles){
-        
+      const { commands, commandArray } = client;
+      for (const file of commandFiles) {
+        const command = require(`../../commands/${folder}/${file}`);
+        commands.set(command.data.name, command);
+        commandArray.push(command, command.data.toJson());
+        console.log(`Command: ${command.data.name} has been registered`)
       }
     }
   };
